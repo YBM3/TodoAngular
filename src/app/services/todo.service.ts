@@ -33,6 +33,7 @@ export class TodoService {
     const todos = this._todos.getValue();
     const index = todos.findIndex(todo => todo === updatedTodo);
     if (index !== -1) {
+      updatedTodo.date = new Date(updatedTodo.date || Date.now());
       const newTodos = [...todos.slice(0, index), updatedTodo, ...todos.slice(index + 1)];
       this._todos.next(newTodos);
     }
