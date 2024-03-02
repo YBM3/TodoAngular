@@ -1,0 +1,84 @@
+<div class="container mb-4">
+  <header class="mb-4">
+    <h1 class="text-center mb-5">Todo List</h1>
+    <div class="input-group mb-3">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="What needs to be done?"
+        [(ngModel)]="newTodo"
+        (keyup.enter)="addTodo(newTodoDate)"
+      />
+      <input type="date" class="form-control" [(ngModel)]="newTodoDate" />
+      <button class="btn btn-primary" (click)="addTodo(newTodoDate)">
+        Add Todo
+      </button>
+    </div>
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Search..."
+      [(ngModel)]="searchTerm"
+      (keyup)="search()"
+    />
+  </header>
+
+  <section class="main">
+    <ul class="list-group">
+      <li
+        *ngFor="let todo of filteredTodos$ | async"
+        class="list-group-item d-flex justify-content-between align-items-center w-100"
+        [class.list-group-item-success]="todo.done"
+        style="height: 55px"
+      >
+        <div *ngIf="!todo.editing" class="d-flex justify-content-between w-100">
+          <div class="d-flex align-items-center gap-2">
+            <input
+              class="form-check-input me-1"
+              type="checkbox"
+              [(ngModel)]="todo.done"
+              (ngModelChange)="saveTodo(todo)"
+            />
+            <label>
+              {{ todo.title }}.
+              <span class="badge bg-secondary rounded-pill">{{
+                todo.date | date : "dd.MM.yy"
+              }}</span>
+            </label>
+          </div>
+          <div class="d-flex gap-2 align-items-center">
+            <button
+              class="btn btn-outline-secondary btn-sm"
+              (click)="editTodo(todo)"
+            >
+              Edit
+            </button>
+            <button
+              class="btn btn-outline-danger btn-sm"
+              (click)="todoService.deleteTodo(todo)"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+        <div *ngIf="todo.editing" class="d-flex justify-content-between w-100">
+          <div class="d-flex gap-2">
+            <input class="form-control" [(ngModel)]="todo.title" />
+            <input class="form-control" type="date" [(ngModel)]="todo.date" />
+          </div>
+          <div class="d-flex gap-2 align-items-center">
+            <button class="btn btn-success btn-sm" (click)="saveTodo(todo)">
+              Save
+            </button>
+            <button
+              class="btn btn-warning btn-sm"
+              (click)="cancelEditing(todo)"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </section>
+</div>
